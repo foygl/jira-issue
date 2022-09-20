@@ -10,6 +10,9 @@ PROJECT_NAME= # See: https://myid.atlassian.net/secure/BrowseProjects.jspa
 PROJECT_KEY= # See: https://myid.atlassian.net/secure/BrowseProjects.jspa
 ORG_URL= # https://myid.atlassian.net
 
+# This can differ between environments
+ISSUE_TYPE_ID=3
+
 ########################
 
 SUMMARY="$1"
@@ -94,7 +97,7 @@ then
   fi
 fi
 
-CREATE_ISSUE_RESPONSE=$( jira_post issue '{ "fields": { "summary" : "'"${SUMMARY}"'", "issuetype" : { "id" : "10001" }, "components" : ['"${SELECTED_COMPONENTS}"'], "project" : { "id" : "'${PROJECT_ID}'" }, "description" : { "type": "doc", "version": 1, "content": [ { "type": "paragraph", "content": [ { "text": "'"${DESCRIPTION}"'", "type": "text" } ] } ] } } }' )
+CREATE_ISSUE_RESPONSE=$( jira_post issue '{ "fields": { "summary" : "'"${SUMMARY}"'", "issuetype" : { "id" : "'${ISSUE_TYPE_ID}'" }, "components" : ['"${SELECTED_COMPONENTS}"'], "project" : { "id" : "'${PROJECT_ID}'" }, "description" : { "type": "doc", "version": 1, "content": [ { "type": "paragraph", "content": [ { "text": "'"${DESCRIPTION}"'", "type": "text" } ] } ] } } }' )
 ISSUE_ID=$( echo "${CREATE_ISSUE_RESPONSE}" | jq '.id' | sed 's/"//g' )
 
 if [ "${ISSUE_ID}" == "null" ]
